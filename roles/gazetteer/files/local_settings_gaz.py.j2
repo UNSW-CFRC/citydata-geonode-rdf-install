@@ -1,0 +1,41 @@
+# additional settings for RDF triplestore.
+
+# needs SITEURL defined
+# how best to pick this up?
+# but leave it free to have a separate server for RDF!
+SITEURL='{{ site_url }}'
+
+RDFSERVER=SITEURL[:-1]
+    
+GAZ_APPS = (
+   
+    # gazetteer and linked data elements
+    'rdf_io',
+    'skosxl',
+    'gazetteer',
+    'uriredirect',
+)
+
+INSTALLED_APPS += GAZ_APPS
+
+# RDF triplestore settings
+RDFSTORE_RDF4J = {
+    'default' : {
+        'server' : "".join((RDFSERVER,":8080/rdf4j-server/repositories/gaz" )),
+        'server_api' : "RDF4JREST",
+        # model and slug are special - slug will revert to id if not present
+        'target' : "/statements?context=<{model}>",
+        # this should be pulled from settings
+        'sparql' : "".join((RDFSERVER,":8080/rdf4j-server/repositories/gaz" ))
+        },
+    'scheme' : {
+        'target' : "/statements?context=<{uri}>",
+#        'headers' : { 'Slug' : "{slug}" }
+        },
+    'concept' : {
+        'target' : "/statements?context=<{scheme__uri}/{term}>",
+#        'headers' : { 'Slug' : "{term}" }
+        }
+}
+
+RDFSTORE = RDFSTORE_RDF4J

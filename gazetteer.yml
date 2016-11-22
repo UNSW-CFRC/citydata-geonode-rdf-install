@@ -1,0 +1,17 @@
+---
+
+- name: Provision gazetteer and linked data extensions on a {{ application_name }} server
+  hosts: mapstory
+  become: yes
+  become_user: root
+  remote_user: vagrant
+  vars:
+    - update_apt_cache: yes
+  vars_files:
+    - host_vars/base.yml
+#    - host_vars/{{ env }}.yml
+    - host_vars/rdfstore.yml
+  roles:
+#    - modules
+#    - rdfstore
+    - gazetteer

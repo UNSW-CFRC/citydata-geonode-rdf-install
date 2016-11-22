@@ -1,0 +1,8 @@
+---
+# Settings to set up rdf store and Linked data API connected to it
+gaz_app: '{{ top_project }}/django-gazetteer'
+skos_app: '{{ top_project }}/django-skosxl'
+rdf_app: '{{ top_project }}/django-rdf_io'
+url_app: '{{ top_project }}/django-rdf_io'
+
+rdf4j_download: 

@@ -1,0 +1,12 @@
+# requirements for the Linked Data and gazetteer extensions
+# Rob Atkinson, rob-squigglyat-metalinkage.com.au
+#
+-e ../django-rdf-io
+-e ../django-skosxl
+-e ../django-gazetteer
+-e ../uriredirect
+
+# this should be pulled in transitively from rdf_io..
+rdflib
+
+# Rob to add another dependency: JSON LD encoder

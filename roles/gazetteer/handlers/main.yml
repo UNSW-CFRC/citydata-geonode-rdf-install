@@ -1,0 +1,17 @@
+---
+
+- name: restart nginx
+  service: name=nginx state=restarted
+
+- name: reload supervisor
+  shell: /usr/bin/supervisorctl reload
+  become: yes
+
+- name: restart django
+  supervisorctl: name=gunicorn-django state=started
+  become: yes
+  notify: check django running
+  ignore_errors: True
+
+- name: check django running
+  uri: url=http://localhost

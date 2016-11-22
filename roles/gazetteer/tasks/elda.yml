@@ -1,0 +1,29 @@
+---
+
+- name: install RDF4J
+  get_url: dest=/tmp/dna.war force=no  url=https://github.com/rob-metalinkage/dna_demodata/blob/master/dna.war?raw=true
+#  unarchive: creates=/tmp/eclipse-rdf4j-2.1.1/war/rdf4j-server.war dest=/tmp  remote_src=yes src=http://www.eclipse.org/downloads/download.php?file=/rdf4j/eclipse-rdf4j-2.1.1-sdk.zip&r=1
+  tags: [elda]
+
+- name: check if war installed
+  stat: path=/var/lib/tomcat7/webapps/dna.war
+  register: file_exists
+  tags: [elda]
+  
+- name: mv war files to tomcat
+  shell: cp /tmp/dna.war /var/lib/tomcat7/webapps/
+  when: not file_exists.stat.exists
+  tags: [elda]
+  
+- name: clear bundled ELDA configs
+  shell: rm -rf /var/lib/tomcat7/webapps/dna/lda-assets/resources/*
+  tags: [elda, elda-config]
+
+# this is kinda ugly 
+- name: update ELDA configs
+  shell: cp  -r {{ project_path }}/../django-skosxl/configs/* /var/lib/tomcat7/webapps/dna/lda-assets/resources
+  tags: [elda, elda-config]
+  
+- name: set perms 
+  file: path=/var/lib/tomcat7/webapps/dna/lda-assets/resources group=tomcat7 owner=tomcat7 mode=755 
+  tags: [elda, elda-config]
