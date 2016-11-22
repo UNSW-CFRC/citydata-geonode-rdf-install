@@ -1,12 +1,12 @@
 ---
 
-- name: Provision gazetteer and linked data extensions on a {{ application_name }} server
-  hosts: mapstory
-  become: yes
-  become_user: root
-  remote_user: vagrant
-  vars:
-    - update_apt_cache: yes
+- name: Provision gazetteer and linked data extensions on a {{ application }} server
+  hosts: '{{ host }}'
+  become: true
+#  become_user: root
+#  remote_user: vagrant
+#  vars:
+#    - update_apt_cache: yes
   vars_files:
     - host_vars/base.yml
 #    - host_vars/{{ env }}.yml

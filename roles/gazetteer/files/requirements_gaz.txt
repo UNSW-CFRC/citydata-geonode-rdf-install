@@ -6,7 +6,5 @@
 -e ../django-gazetteer
 -e ../uriredirect
 
-# this should be pulled in transitively from rdf_io..
+# this should be pulled in transitively from rdf_io
 rdflib
-
-# Rob to add another dependency: JSON LD encoder
