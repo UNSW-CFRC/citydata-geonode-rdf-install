@@ -11,4 +11,4 @@ Ansible playbook to install Geonode semantic extensions by [rob-metalinkage](htt
 * Geonode 2.4 - e.g. installed with [geonode_install playbook](https://github.com/UNSW-CFRC/geonode_install)
 
 ## Usage
-ansible-playbook gazetteer.yml --extra-vars "host=HOST_NAME"
+> ansible-playbook gazetteer.yml --extra-vars "host=HOST_NAME"
