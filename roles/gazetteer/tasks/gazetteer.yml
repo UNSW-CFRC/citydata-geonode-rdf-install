@@ -133,7 +133,8 @@
   when: venv is not defined
 
 - name: restart django web server
-  shell: 'sudo service apache2 restart'
+  service: name={{ web_server }} state=restarted
+  become: true
 
 # Load data - Rob working on this
 
