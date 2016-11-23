@@ -2,20 +2,20 @@
 - name: ensure known hosts
   shell: mkdir ~/.ssh; touch ~/.ssh/known_hosts
   become_user: '{{ application_user }}'
-  tags: [config]
+  tags: config
 
   
 - name: remove github.com from known host
   shell: ssh-keygen -R github.com
   become_user: '{{ application_user }}'
   when: setup_git_repo is defined and setup_git_repo
-  tags: [config]
+  tags: config
 
 - name: ensure github.com in known host
   shell: ssh-keyscan -H github.com > ~/.ssh/known_hosts
   become_user: '{{ application_user }}'
   when: setup_git_repo is defined and setup_git_repo
-  tags: [config]
+  tags: config
 
 - name: check if virtualenv already exists
   stat: path={{venv}}
@@ -35,19 +35,19 @@
   command: mv /tmp/local_key.py {{ project_path }}/{{ project_name }}/settings/local_key.py
   become_user: '{{ application_user }}'
   notify: restart django
-  tags: [settings]
+  tags: settings
  
 - name: write project local settings - sync filesystem safe
   template: src=roles/gazetteer/files/local_settings_gaz.py.j2 dest=/tmp/local_settings_gaz.py
   become_user: '{{ application_user }}'
-  tags: [settings]
+  tags: settings
 
 
 - name: mv project local settings across synced file system if necessary
   command: mv /tmp/local_settings_gaz.py {{ project_path }}/{{ project_name }}/settings/local_settings_gaz.py
   become_user: '{{ application_user }}'
   notify: restart django
-  tags: [settings]
+  tags: settings
 
 - name: syncdb
   django_manage: command="syncdb --noinput" virtualenv={{ venv }} app_path={{ project_path }}
