@@ -16,7 +16,8 @@
 
 # this is kinda ugly 
 - name: update ELDA configs
-  shell: cp  -r {{ project_path }}/../django-skosxl/configs/* /var/lib/tomcat7/webapps/dna/lda-assets/resources
+  shell: cp -r {{ top_project }}/django-skosxl/configs/* /var/lib/tomcat7/webapps/dna/lda-assets/resources
+  become: true
   tags: [elda, elda-config]
   
 - name: set perms 
