@@ -13,8 +13,10 @@
 #  notify: check django running
 #  ignore_errors: True
 
+- name: restart django web server
+  service: name={{ web_server }} state=restarted
   notify: check django running
-  ignore_errors: True
+  become: true
 
 - name: check django running
   uri: url=http://localhost
