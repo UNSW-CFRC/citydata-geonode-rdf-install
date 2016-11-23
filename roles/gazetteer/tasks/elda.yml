@@ -1,6 +1,6 @@
 ---
 
-- name: install RDF4J
+- name: install Linked Data API
   get_url: dest=/tmp/dna.war force=no  url=https://github.com/rob-metalinkage/dna_demodata/blob/master/dna.war?raw=true
 #  unarchive: creates=/tmp/eclipse-rdf4j-2.1.1/war/rdf4j-server.war dest=/tmp  remote_src=yes src=http://www.eclipse.org/downloads/download.php?file=/rdf4j/eclipse-rdf4j-2.1.1-sdk.zip&r=1
   tags: [elda]
