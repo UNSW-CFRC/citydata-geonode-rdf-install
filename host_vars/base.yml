@@ -9,8 +9,12 @@ git_repo: geonode
 #mapstory_branch: master
 
 top_project: '~{{ application_user }}'
-#project_path: '{{ top_project }}/{{ git_repo }}'
+
+# Django project path
 project_path: '{{ top_project }}/{{ git_repo }}'
+
+# web_server: nginx
+web_server: apache2
 
 # don't change these
 #venv: /home/mapstory/.virtualenvs/{{ project }}
