@@ -2,7 +2,6 @@
 
 - name: install Linked Data API
   get_url: dest=/tmp/dna.war force=no  url=https://github.com/rob-metalinkage/dna_demodata/blob/master/dna.war?raw=true
-#  unarchive: creates=/tmp/eclipse-rdf4j-2.1.1/war/rdf4j-server.war dest=/tmp  remote_src=yes src=http://www.eclipse.org/downloads/download.php?file=/rdf4j/eclipse-rdf4j-2.1.1-sdk.zip&r=1
   tags: elda
 
 - name: copy war to tomcat
@@ -14,7 +13,6 @@
   file: dest=/var/lib/tomcat7/webapps/dna/lda-assets/resources/* state=absent
   tags: [elda, elda-config]
 
-# this is kinda ugly 
 - name: update ELDA configs
   shell: cp -r {{ top_project }}/django-skosxl/configs/* /var/lib/tomcat7/webapps/dna/lda-assets/resources
   become: true

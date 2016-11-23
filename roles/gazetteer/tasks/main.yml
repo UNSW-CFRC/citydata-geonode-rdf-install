@@ -1,5 +1,4 @@
 ---
-
 - include: setup.yml
   tags: gazetteer
 

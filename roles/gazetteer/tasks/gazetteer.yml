@@ -1,44 +1,26 @@
 ---
-
-
-#- name: remove github.com from known host
-#  shell: ssh-keygen -R github.com
-#  become_user: '{{ application_user }}'
-##  when: setup_git_repo is defined and setup_git_repo
-#  tags: config
-#
-#- name: ensure github.com in known host
-#  shell: ssh-keyscan -H github.com > ~/.ssh/known_hosts
-#  become_user: '{{ application_user }}'
-##  when: setup_git_repo is defined and setup_git_repo
-#  tags: config
-  
 - name: rdf_io checkout
   git: repo=git://github.com/rob-metalinkage/django-rdf-io.git dest={{ top_project }}/django-rdf-io force=no
   become_user: '{{ application_user }}'
   ignore_errors: True
-#  when: setup_git_repo is defined and setup_git_repo
   tags: git
 
 - name: skosxl checkout
   git: repo=git://github.com/rob-metalinkage/django-skosxl.git dest={{ top_project }}/django-skosxl force=no
   become_user: '{{ application_user }}'
   ignore_errors: True
-#  when: setup_git_repo is defined and setup_git_repo
   tags: git
 
 - name: django-gazetteer checkout
   git: repo=git://github.com/rob-metalinkage/django-gazetteer.git dest={{ top_project }}/django-gazetteer force=no
   become_user: '{{ application_user }}' 
   ignore_errors: True
-#  when: setup_git_repo is defined and setup_git_repo
   tags: git
 
 - name: uriredirect checkout
   git: repo=git://github.com/rob-metalinkage/uriredirect.git dest={{ top_project }}/uriredirect force=no
   become_user: '{{ application_user }}'
   ignore_errors: True
-#  when: setup_git_repo is defined and setup_git_repo
   tags: git
 
 - name: Copy requirements file
@@ -73,7 +55,6 @@
 - name: mv project local settings across synced file system if necessary
   command: mv /tmp/local_settings_gaz.py '{{ settings_path }}/local_settings_gaz.py'
   become_user: '{{ application_user }}'
-# notify: restart django
   notify: restart django web server
   tags: settings
   
@@ -90,7 +71,6 @@
   become_user: '{{ application_user }}'
 
 - name: install RDF4J
-  # unarchive: creates=/tmp/eclipse-rdf4j-1.0.2/war/rdf4j-server.war dest=/tmp  remote_src=yes src=http://www.eclipse.org/downloads/download.php?file=/rdf4j/eclipse-rdf4j-1.0.2-sdk.zip&r=1
   unarchive: creates=/tmp/eclipse-rdf4j-2.1.1/war/rdf4j-server.war dest=/tmp  remote_src=yes src=http://www.eclipse.org/downloads/download.php?file=/rdf4j/eclipse-rdf4j-2.1.1-sdk.zip&r=1
   tags: rdf4j
 
@@ -104,7 +84,6 @@
   tags: rdf4j
   
 - name: mv war files to tomcat
-#  shell: cp /tmp/eclipse-rdf4j-1.0.2/war/*.war /var/lib/tomcat7/webapps/
   shell: cp /tmp/eclipse-rdf4j*/war/*.war /var/lib/tomcat7/webapps/
   when: not file_exists.stat.exists
   tags: rdf4j
@@ -125,31 +104,13 @@
 
 - name: virtual syncdb
   django_manage: command="syncdb --noinput" virtualenv={{ venv }} app_path={{ project_path }}
-#  become_user: '{{ application_user }}'
   become: true
   tags: [update, syncdb]
   when: venv is defined
 
 - name: syncdb
   django_manage: command="syncdb --noinput" app_path={{ project_path }}
-#  become_user: '{{ application_user }}'
   become: true
   tags: [update, syncdb]
   when: venv is not defined
   notify: restart django web server
-
-# Load data - Rob working on this
-
-#- name: load initial data for skosxl - gazetteer feature types
-#  django_manage: app_path={{ project_path }} virtualenv={{ venv }} fixtures='{{ skos_app }}/skosxl/fixtures/rdf_io_mappings.json' command=loaddata
-#  become_user: '{{ application_user }}'
-#  tags: [settings, initial_data]
-#
-#  
-#- name: load initial gazetteer harvest configurations and skos feature type mappings
-#  django_manage: app_path={{ project_path }} virtualenv={{ venv }} fixtures='{{ skos_app }}/skosxl/fixtures/mdg_example.json' command=loaddata
-#  become_user: '{{ application_user }}'
-#  tags: test_data
- 
-  
-

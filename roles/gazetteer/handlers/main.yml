@@ -1,18 +1,4 @@
 ---
-
-#- name: restart nginx
-#  service: name=nginx state=restarted
-#
-#- name: reload supervisor
-#  shell: /usr/bin/supervisorctl reload
-#  become: yes
-#
-#- name: restart django
-#  supervisorctl: name=gunicorn-django state=restarted
-#  become: yes
-#  notify: check django running
-#  ignore_errors: True
-
 - name: restart django web server
   service: name={{ web_server }} state=restarted
   notify: check django running
