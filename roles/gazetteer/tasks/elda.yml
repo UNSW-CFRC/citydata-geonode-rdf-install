@@ -11,7 +11,7 @@
   tags: elda
   
 - name: clear bundled ELDA configs
-  shell: rm -rf /var/lib/tomcat7/webapps/dna/lda-assets/resources/*
+  file: dest=/var/lib/tomcat7/webapps/dna/lda-assets/resources/* state=absent
   tags: [elda, elda-config]
 
 # this is kinda ugly 
