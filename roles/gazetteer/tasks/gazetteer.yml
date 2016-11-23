@@ -106,6 +106,18 @@
   
 - name: syncdb
   django_manage: command="syncdb --noinput" virtualenv={{ venv }} app_path={{ project_path }}
+- name: Make manage.py executable
+  # Required for Ansible 2.x https://github.com/ansible/ansible-modules-core/issues/2856
+  file: dest='{{ project_path }}/manage.py' mode=u+x
+  become_user: '{{ application_user }}'
+  
+- name: update manage.py shebang
+  # Required for Ansible 2.x https://github.com/ansible/ansible-modules-core/issues/2856
+  lineinfile:
+    dest: '{{ project_path }}/manage.py'
+    insertbefore: BOF
+    regexp: '^#!'
+    line: '#!/usr/bin/env python'
   become_user: '{{ application_user }}'
   tags: [update, syncdb]
 
