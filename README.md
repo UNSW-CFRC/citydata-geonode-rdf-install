@@ -7,6 +7,7 @@ Ansible playbook to install Geonode semantic extensions by [rob-metalinkage](htt
 
 ## Requirements
 * Ubuntu 16.04
+* Ansible - [installation instructions](http://docs.ansible.com/ansible/intro_installation.html#latest-releases-via-apt-ubuntu)
 * Geonode 2.4 - e.g. installed with [geonode_install playbook](https://github.com/UNSW-CFRC/geonode_install)
 
 ## Usage
