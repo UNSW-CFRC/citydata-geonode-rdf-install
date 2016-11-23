@@ -104,8 +104,6 @@
   when: not file_exists.stat.exists
   tags: rdf4j
   
-- name: syncdb
-  django_manage: command="syncdb --noinput" virtualenv={{ venv }} app_path={{ project_path }}
 - name: Make manage.py executable
   # Required for Ansible 2.x https://github.com/ansible/ansible-modules-core/issues/2856
   file: dest='{{ project_path }}/manage.py' mode=u+x
@@ -119,7 +117,20 @@
     regexp: '^#!'
     line: '#!/usr/bin/env python'
   become_user: '{{ application_user }}'
+
+- name: virtual syncdb
+  django_manage: command="syncdb --noinput" virtualenv={{ venv }} app_path={{ project_path }}
+#  become_user: '{{ application_user }}'
+  become: true
   tags: [update, syncdb]
+  when: venv is defined
+
+- name: syncdb
+  django_manage: command="syncdb --noinput" app_path={{ project_path }}
+#  become_user: '{{ application_user }}'
+  become: true
+  tags: [update, syncdb]
+  when: venv is not defined
 
 - name: restart django web server
   shell: 'sudo service apache2 restart'
