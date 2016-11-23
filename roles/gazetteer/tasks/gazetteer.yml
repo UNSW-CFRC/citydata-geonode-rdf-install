@@ -55,7 +55,7 @@
 - name: mv project local settings across synced file system if necessary
   command: mv /tmp/local_settings_gaz.py '{{ settings_path }}/local_settings_gaz.py'
   become_user: '{{ application_user }}'
-  notify: restart django web server
+  notify: restart django
   tags: settings
   
 - name: import local_settings_gaz
@@ -132,4 +132,4 @@
   become: true
   tags: [update, syncdb]
   when: venv is not defined
-  notify: restart django web server
+  notify: restart django

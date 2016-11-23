@@ -1,8 +1,13 @@
 ---
-- name: restart django web server
-  service: name={{ web_server }} state=restarted
+- name: restart django
+  file: path='{{ project_path }}/{{ package }}/wsgi.py' state=touch
   notify: check django running
-  become: true
+  become_user: '{{ application_user }}'
+
+#- name: restart django web server
+#  service: name={{ web_server }} state=restarted
+#  notify: check django running
+#  become: true
 
 - name: check django running
-  uri: url=http://localhost
+  uri: url=http://localhost/rdf_io/to_rdf/concept/id/1
