@@ -57,11 +57,32 @@
   become_user: '{{ application_user }}'
   tags: settings
 
+- name: check for settings directory
+  stat: path='{{ settings_path }}/settings'
+  register: settings_dir
+
+- name: set settings path
+  set_fact:
+    settings_path: '{{ settings_path }}/settings'
+  when: settings_dir.stat.exists
+  
 - name: mv project local settings across synced file system if necessary
-  command: mv /tmp/local_settings_gaz.py {{ project_path }}/{{ project }}/settings/local_settings_gaz.py
+  command: mv /tmp/local_settings_gaz.py '{{ settings_path }}/local_settings_gaz.py'
   become_user: '{{ application_user }}'
   notify: restart django
   tags: settings
+  
+- name: import local_settings_gaz
+  blockinfile:
+    dest: '{{ settings_path }}/local_settings.py'
+    marker: '# {mark} ANSIBLE MANAGED BLOCK'
+    block: |
+      # Load more settings from a file called local_settings_gaz.py if it exists
+      try:
+          from local_settings_gaz import *
+      except ImportError:
+          pass
+  become_user: '{{ application_user }}'
 
 - name: install RDF4J
   # unarchive: creates=/tmp/eclipse-rdf4j-1.0.2/war/rdf4j-server.war dest=/tmp  remote_src=yes src=http://www.eclipse.org/downloads/download.php?file=/rdf4j/eclipse-rdf4j-1.0.2-sdk.zip&r=1

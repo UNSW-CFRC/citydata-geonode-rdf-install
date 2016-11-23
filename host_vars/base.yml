@@ -13,6 +13,9 @@ top_project: '~{{ application_user }}'
 # Django project path
 project_path: '{{ top_project }}/{{ git_repo }}'
 
+# Initial path for (local) settings file
+settings_path: '{{ project_path }}/{{ project }}'
+
 # web_server: nginx
 web_server: apache2
 
