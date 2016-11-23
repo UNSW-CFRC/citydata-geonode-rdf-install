@@ -16,24 +16,28 @@
 - name: rdf_io checkout
   git: repo=git://github.com/rob-metalinkage/django-rdf-io.git dest={{ top_project }}/django-rdf-io force=no
   become_user: '{{ application_user }}'
+  ignore_errors: True
 #  when: setup_git_repo is defined and setup_git_repo
   tags: git
 
 - name: skosxl checkout
   git: repo=git://github.com/rob-metalinkage/django-skosxl.git dest={{ top_project }}/django-skosxl force=no
   become_user: '{{ application_user }}'
+  ignore_errors: True
 #  when: setup_git_repo is defined and setup_git_repo
   tags: git
 
 - name: django-gazetteer checkout
   git: repo=git://github.com/rob-metalinkage/django-gazetteer.git dest={{ top_project }}/django-gazetteer force=no
-  become_user: '{{ application_user }}'
+  become_user: '{{ application_user }}' 
+  ignore_errors: True
 #  when: setup_git_repo is defined and setup_git_repo
   tags: git
 
 - name: uriredirect checkout
   git: repo=git://github.com/rob-metalinkage/uriredirect.git dest={{ top_project }}/uriredirect force=no
   become_user: '{{ application_user }}'
+  ignore_errors: True
 #  when: setup_git_repo is defined and setup_git_repo
   tags: git
 
