@@ -70,6 +70,25 @@
           pass
   become_user: '{{ application_user }}'
 
+- name: add url patterns
+  blockinfile:
+    dest: '{{ project_path }}/{{ package }}/urls.py'
+    marker: '# {mark} ANSIBLE MANAGED BLOCK'
+    block: |
+      try:
+          urlpatterns += patterns('', 
+              # Gazetteer 
+              url(r"^gazetteer/", include('gazetteer.urls')),
+              # URI redirectors
+              url(r"^def/", include('uriredirect.urls')), 
+              url(r"^rdf_io/", include ('rdf_io.urls')),
+              # Semantic Web components
+              url(r"^skosxl/", include ('skosxl.urls')),
+          )
+      except:
+          pass
+  become_user: '{{ application_user }}'
+
 - name: install RDF4J
   unarchive: creates=/tmp/eclipse-rdf4j-2.1.1/war/rdf4j-server.war dest=/tmp  remote_src=yes src=http://www.eclipse.org/downloads/download.php?file=/rdf4j/eclipse-rdf4j-2.1.1-sdk.zip&r=1
   tags: rdf4j

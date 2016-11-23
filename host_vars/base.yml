@@ -5,6 +5,7 @@ application: '{{ project }}'
 application_user: '{{ project }}'
 
 git_repo: geonode
+package: geonode
 
 #mapstory_branch: master
 
