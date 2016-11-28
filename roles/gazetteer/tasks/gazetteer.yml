@@ -107,7 +107,7 @@
   when: not file_exists.stat.exists
   tags: rdf4j
   
-- name: Make manage.py executable
+- name: Ensure manage.py is executable
   # Required for Ansible 2.x https://github.com/ansible/ansible-modules-core/issues/2856
   file: dest='{{ project_path }}/manage.py' mode=u+x
   become_user: '{{ application_user }}'
@@ -133,3 +133,6 @@
   tags: [update, syncdb]
   when: venv is not defined
   notify: restart django
+
+- name: initialise skosxl
+  uri: url=http://cfdev.intersect.org.au/skosxl/manage/init
