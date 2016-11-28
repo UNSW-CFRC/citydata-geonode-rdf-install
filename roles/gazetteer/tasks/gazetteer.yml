@@ -135,4 +135,4 @@
   notify: restart django
 
 - name: initialise skosxl
-  uri: url=http://cfdev.intersect.org.au/skosxl/manage/init
+  uri: url=http://{{ host }}/skosxl/manage/init
