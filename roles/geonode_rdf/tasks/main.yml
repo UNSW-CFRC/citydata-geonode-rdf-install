@@ -1,0 +1,9 @@
+---
+- include: setup.yml
+  tags: rdf
+
+- include: rdf_apps.yml
+  tags: rdf
+
+- include: elda.yml
+  tags: rdf

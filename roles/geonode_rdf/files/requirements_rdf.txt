@@ -1,4 +1,4 @@
-# requirements for the Linked Data and gazetteer extensions
+# requirements for the RDF extensions
 # Rob Atkinson, rob-squigglyat-metalinkage.com.au
 #
 -e ../django-rdf-io

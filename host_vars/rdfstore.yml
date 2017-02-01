@@ -5,4 +5,6 @@ skos_app: '{{ top_project }}/django-skosxl'
 rdf_app: '{{ top_project }}/django-rdf_io'
 url_app: '{{ top_project }}/django-rdf_io'
 
+rdf_repo: 'uqol'
+
 rdf4j_download: 

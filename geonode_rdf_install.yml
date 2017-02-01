@@ -1,9 +1,9 @@
 ---
-- name: Provision gazetteer and linked data extensions on a {{ application }} server
+- name: Provision RDF extensions on a {{ application }} server
   hosts: '{{ host }}'
   become: true
   vars_files:
     - host_vars/base.yml
     - host_vars/rdfstore.yml
   roles:
-    - gazetteer
+    - geonode_rdf

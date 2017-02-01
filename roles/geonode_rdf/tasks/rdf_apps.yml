@@ -24,22 +24,22 @@
   tags: git
 
 - name: Copy requirements file
-  copy: src=../files/requirements_gaz.txt dest={{ top_project }}/requirements_gaz.txt
+  copy: src=../files/requirements_rdf.txt dest={{ top_project }}/requirements_rdf.txt
 
 - name: pip virtual install
-  pip: virtualenv={{venv}} chdir={{ project_path }} requirements=../requirements_gaz.txt
+  pip: virtualenv={{venv}} chdir={{ project_path }} requirements=../requirements_rdf.txt
   become: true
   tags: pip
   when: venv is defined
   
 - name: pip install
-  pip: chdir={{ project_path }} requirements=../requirements_gaz.txt
+  pip: chdir={{ project_path }} requirements=../requirements_rdf.txt
   become: true
   tags: pip
   when: venv is not defined
   
 - name: write project local settings - sync filesystem safe
-  template: src=../files/local_settings_gaz.py.j2 dest=/tmp/local_settings_gaz.py
+  template: src=../files/local_settings_rdf.py.j2 dest=/tmp/local_settings_rdf.py
   become_user: '{{ application_user }}'
   tags: settings
 
@@ -53,19 +53,19 @@
   when: settings_dir.stat.exists
   
 - name: mv project local settings across synced file system if necessary
-  command: mv /tmp/local_settings_gaz.py '{{ settings_path }}/local_settings_gaz.py'
+  command: mv /tmp/local_settings_rdf.py '{{ settings_path }}/local_settings_rdf.py'
   become_user: '{{ application_user }}'
   notify: restart django
   tags: settings
   
-- name: import local_settings_gaz
+- name: import local_settings_rdf
   blockinfile:
     dest: '{{ settings_path }}/local_settings.py'
     marker: '# {mark} ANSIBLE MANAGED BLOCK'
     block: |
-      # Load more settings from a file called local_settings_gaz.py if it exists
+      # Load more settings from a file called local_settings_rdf.py if it exists
       try:
-          from local_settings_gaz import *
+          from local_settings_rdf import *
       except ImportError:
           pass
   become_user: '{{ application_user }}'

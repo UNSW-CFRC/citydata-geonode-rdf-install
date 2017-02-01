@@ -12,4 +12,4 @@ Ansible playbook to install Geonode semantic extensions by [rob-metalinkage](htt
 
 ## Usage
 Run the playbook from your controlling machine:
-> ansible-playbook gazetteer.yml --extra-vars "host=HOST_NAME"
+> ansible-playbook geonode_rdf_install.yml --extra-vars "host=HOST_NAME"

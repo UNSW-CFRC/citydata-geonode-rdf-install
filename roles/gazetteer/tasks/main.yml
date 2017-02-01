@@ -1,9 +1,0 @@
----
-- include: setup.yml
-  tags: gazetteer
-
-- include: gazetteer.yml
-  tags: gazetteer
-
-- include: elda.yml
-  tags: gazetteer
