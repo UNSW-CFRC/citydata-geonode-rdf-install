@@ -1,0 +1,103 @@
+@prefix spin: <http://spinrdf.org/spin#>.
+@prefix sp: <http://spinrdf.org/sp#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+
+owl:Ontology spin:rule [ 
+    a sp:Construct ;
+    rdfs:label "Create SKOS scheme from OWL ontology"@en;
+    rdfs:comment "Provides readable labels and replicates owl:subClassOf relationships as skos:broader"@en ;
+    sp:text """
+        PREFIX owl: <http://www.w3.org/2002/07/owl#>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+        PREFIX vann: <http://purl.org/vocab/vann/>
+        PREFIX dc: <http://purl.org/dc/terms/>
+ 
+        # Existing standard ontologies to exclude from this rule
+        #
+        PREFIX spl: <http://spinrdf.org/spl>
+        PREFIX sp: <http://spinrdf.org/sp>
+        PREFIX spin: <http://spinrdf.org/spin>
+
+        BASE <http://cfdev.intersect.org.au/def/>
+        PREFIX schemes: <voc/>
+
+        CONSTRUCT {
+            ?scheme   a skos:ConceptScheme, owl:Ontology;
+                    owl:imports ?this;
+                    skos:altLabel ?title.
+        }
+        WHERE {
+            ?this a owl:Ontology
+            OPTIONAL {?this vann:preferredNamespacePrefix ?prefix}
+            OPTIONAL {?this dc:title ?title}
+            FILTER ((?this NOT IN (spl:, sp:, spin:)) && ! (STRSTARTS(str(?this), str(schemes:))))
+            BIND (IRI(CONCAT (str(schemes:), COALESCE(?prefix, "unnamed"))) as ?scheme)
+            
+    }
+    """ ;
+];
+.
+
+owl:Class spin:rule [ 
+        a sp:Construct ;
+        rdfs:label "Creates a SKOS concept for each OWL term"@en;
+        sp:text """
+            PREFIX owl: <http://www.w3.org/2002/07/owl#>
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+            PREFIX vann: <http://purl.org/vocab/vann/>
+
+            BASE <http://cfdev.intersect.org.au/def/>
+            PREFIX schemes: <voc/>
+
+            CONSTRUCT {
+                ?concept a skos:concept;
+                    skos:altLabel ?label;
+                    owl:sameAs ?term;
+                    rdfs:isDefinedBy ?term;
+                    skos:inScheme ?scheme;
+                    skos:broader ?parent_skos;
+                    skos:narrower ?child_skos.
+            }
+            WHERE {
+                GRAPH ?g
+                {
+                    ?term a owl:Class.
+                    ?ont    a owl:Ontology;
+                            vann:preferredNamespacePrefix ?prefix;
+                            vann:preferredNamespaceUri ?uri.
+                    OPTIONAL {?term rdfs:label ?label}
+                    OPTIONAL {?term rdfs:subClassOf ?parent}
+                    FILTER (STRSTARTS(str(?term), str(?ont)) && (?parent NOT IN (?term, rdfs:Resource)))
+                    BIND (IRI(CONCAT (str(schemes:), CONCAT(COALESCE(?prefix, "unnamed"), "/"))) as ?scheme)
+                    BIND(IRI(REPLACE(STR(?term), ?uri, STR(?scheme))) AS ?concept)
+                    BIND(IRI(REPLACE(STR(?parent), ?uri, STR(?scheme))) AS ?parent_skos)
+                    BIND(IRI(REPLACE(STR(?child), ?uri, STR(?scheme))) AS ?child_skos)
+                }
+            }
+        """ ;
+    ];
+.
+
+owl:Class spin:rule [ 
+        a sp:Construct ;
+        rdfs:label "Asserts SKOS top concept where no broader concept"@en;
+        sp:text """
+            PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+            CONSTRUCT {
+                ?concept skos:topConceptOf ?scheme .
+                ?scheme skos:hasTopConcept ?concept .
+            }
+            WHERE {
+                ?concept a skos:concept;
+                        skos:inScheme ?scheme .
+                FILTER (! EXISTS {
+                  ?concept skos:broader ?o}
+                )
+            }
+        """ ;
+    ];
+.

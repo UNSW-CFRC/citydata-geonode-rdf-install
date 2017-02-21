@@ -1,0 +1,83 @@
+# Worked example of triples output from:
+# Uploading a dataset,  matching an  attribute to a skos:concept, and identifying the minimum spatial area ID and year
+
+@PREFIX gl: <http://cfdev.intersect.org.au/def/datasets/spatial/> .
+@PREFIX void: <http://rdfs.org/ns/void#> .
+@PREFIX qb: <http://purl.org/linked-data/cube> .
+@PREFIX qb4st:
+@PREFIX abs: # Could be a URIredirect to a geoserver query in the absence of abs standing up RDF
+@PREFIX dbf: # Dbase file attributes
+@PREFIX qbx: # Extended qb
+@PREFIX xsd: 
+@PREFIX absft: # ABS feature types
+  dcat:
+  dcterms:
+  sirf: 
+
+# Dataset: sa2_2016_aust_epsg4326
+# Attribute B02_Medi_1
+# Spatial ID SA2_5DIG16
+# Temporal: 2011 (entered by user from dataset name and/or metadata)
+
+gl:sa2_2016_aust_epsg4326 a void:Dataset ; 
+  void:feature gl:heatmap ;
+  # Generated from layer ID
+  qb:structure gl:sa2_2016_aust_epsg4326_struct;
+
+  # Imported from metadata
+  rdfs:label  "Selected Census Medians and Averages for Statistical Areas Level 2 Australia 2011"@en
+  gl:wxsServer "http://cftest.intersect.org.au/geoserver" ;
+  gl:layer "geonode:sa2_2016_aust_epsg4326" ;
+  # Entail:
+  void:vocabulary absAreas: ;
+  dcat:extent "WKT:135,-40,160,-20,EPSG:4326"^^someDataType # or dcterms?
+  . 
+
+gl:heatmap a void:TechnicalFeature ;
+  dcterms:hasFormat media:png ;
+  # getBbox, getWidth & getHeight have to be run on client because only client knows shape of map window
+  sirf:urlTemplate "{gl:wxsServer}/wms?SERVICE=WMS&REQUEST=GetMap&LAYERS={gl:layer}&STYLES={qb:structure qb:component gl:prefStyle}&BBOX={getBbox(qb:structure qb4st:SpatialComponentSpecification qb4st:envelope)}&SRS=EPSG%3A4326&format=image%2Fpng&WIDTH={getWidth()}&HEIGHT={getHeight()}"
+.
+
+gl:sa2_2016_aust_epsg4326_struct a qb:DataStructureDefinition ;
+  qb:component gl:sa2_2016_aust_epsg4326_spatial ;
+  qb:component gl:sa2_2016_aust_epsg4326_temporal ;
+  qb:component gl:sa2_2016_aust_epsg4326_B02_Medi_1 . # From attributes flagged for use by user
+
+gl:sa2_2016_aust_epsg4326_spatial a qb4st:SpatialComponentSpecification;    # Entailed
+  qb:dimension abs:sa2;
+  qbx:attributeName "SA2_5DIG16"^^dbf:AttributeName ;
+  qb4st:envelope "WKT:135,-40,160,-20,EPSG:4326"^^someDataType ;        # Adopt format from geoSPARQL
+  qb4st:partsOf absAreas:SA4-0912309,              # Provide for spatially filtered dataset
+                 absAreas:SA4-567309  .              # qb4st:partsOf will need to allow this OR that
+
+gl:sa2_2016_aust_epsg4326_measure_B02_Medi_1 qb:ComponentSpecification ; 
+  qb:measure uquol:iso37120_15_1_measure ;
+  qbx:attributeName "B02_Medi_1"^^dbf:AttributeName ;
+  gl:prefStyle "sa2_2016_aust_epsg4326_b98d4473"
+  # gl:altStyle ... can add other styles and offer to user to choose 
+.
+
+uquol:iso37120_15_1_measure a qb:Measure ;
+  qb:concept uquol:15.1 ; # Selected by user, from attributes matched to concepts
+  rdfs:label "Slums"@en ; # Entailed from skos:prefLabel
+  rdfs:range xsd:Real .
+
+gl:sa2_2016_aust_epsg4326_temporal a qb4st:TemporalComponentSpecification;    # Entailed
+  qb:dimension abs:year;
+  qb4st:envelopeStart 2016^^iso8601Date ;
+  qb4st:envelopeEnd 2016^^iso8601Date .
+
+# -----------------------------------------
+# Underlying rules:
+abs:sa2 a qb:Dimension,
+  qb4st:refArea ;
+  qb:concept uquol:sa2 ;  # Need to populate SA* concepts with broader/narrower
+  a qb:codedProperty ;      # Entailed from refArea
+  qb:codeList absAreas: ;  # absAreas: holds skos:concepts for all the individual SA1s, SA2, SA3s... 
+  rdfs:range absft:sa2Type .        # Selects type (i.e. SA2) from the abs:statArea list
+
+abs:year a qb:Dimension,
+           qb4st:TemporalProperty ;
+  rdfs:range abs:Year ;
+  rdfs:label "Census year"@en .
