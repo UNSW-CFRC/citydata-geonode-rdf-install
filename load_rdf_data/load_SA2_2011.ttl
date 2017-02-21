@@ -48,8 +48,8 @@ gl:sa2_2016_aust_epsg4326_spatial a qb4st:SpatialComponentSpecification;    # En
   qb:dimension abs:sa2;
   qbx:attributeName "SA2_5DIG16"^^dbf:AttributeName ;
   qb4st:envelope "WKT:135,-40,160,-20,EPSG:4326"^^someDataType ;        # Adopt format from geoSPARQL
-  qb4st:partsOf absAreas:SA4-0912309,              # Provide for spatially filtered dataset
-                 absAreas:SA4-567309  .              # qb4st:partsOf will need to allow this OR that
+  qb4st:subdivides absAreas:SA4-0912309,              # Provide for spatially filtered dataset
+                 absAreas:SA4-567309  .              # qb4st:subdivides will need to allow this OR that
 
 gl:sa2_2016_aust_epsg4326_measure_B02_Medi_1 qb:ComponentSpecification ; 
   qb:measure uquol:iso37120_15_1_measure ;
