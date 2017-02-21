@@ -8,7 +8,7 @@
 @PREFIX abs: # Could be a URIredirect to a geoserver query in the absence of abs standing up RDF
 @PREFIX dbf: # Dbase file attributes
 @PREFIX qbx: # Extended qb
-@PREFIX xsd: 
+@PREFIX xsd: <http://www.w3.org/2001/XMLSchema>
 @PREFIX absft: # ABS feature types
   dcat:
   dcterms:
@@ -79,5 +79,5 @@ abs:sa2 a qb:Dimension,
 
 abs:year a qb:Dimension,
            qb4st:TemporalProperty ;
-  rdfs:range abs:Year ;
+  rdfs:range xsd:gYear ;
   rdfs:label "Census year"@en .
