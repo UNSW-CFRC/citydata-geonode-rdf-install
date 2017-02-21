@@ -5,15 +5,18 @@
 @PREFIX void: <http://rdfs.org/ns/void#> .
 @PREFIX qb: <http://purl.org/linked-data/cube> .
 @PREFIX qb4st: <http://www.w3.org/ns/qb4st/> .
-@PREFIX abs: # Could be a URIredirect to a geoserver query in the absence of abs standing up RDF
-@PREFIX dbf: # Dbase file attributes
-@PREFIX qbx: # Extended qb
 @PREFIX xsd: <http://www.w3.org/2001/XMLSchema> .
-@PREFIX absft: # ABS feature types
 @PREFIX dcat: <https://www.w3.org/ns/dcat> .
 @PREFIX dcterms: <http://purl.org/dc/terms/> .
 @PREFIX sirf: <http://id.sirf.net/def/schema/sirf-metamodel/> .
 @PREFIX time: <http://www.w3.org/2006/time#> . 
+
+# Newly minted namespaces
+#
+@PREFIX qbx:   <http://cfdev.intersect.org.au/def/qbx> . # Extended qb
+@PREFIX abs:   <http://cfdev.intersect.org.au/def/abs> . # Could be a URIredirect to a geoserver query for now
+@PREFIX absft: <http://cfdev.intersect.org.au/def/absft> . # ABS feature types
+@PREFIX dbf:   <http://cfdev.intersect.org.au/def/dbf> . # Dbase file attributes
 
 # Dataset: sa2_2016_aust_epsg4326
 # Attribute B02_Medi_1
