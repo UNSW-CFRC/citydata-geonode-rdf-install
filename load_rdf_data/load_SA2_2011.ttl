@@ -40,8 +40,13 @@ gl:sa2_2016_aust_epsg4326 a void:Dataset ;
   gl:layer "geonode:sa2_2016_aust_epsg4326" ;
   # Entailed:
   void:vocabulary absareas: ;
-  dcat:extent "WKT:135,-40,160,-20,EPSG:4326"
-#  dcat:extent "WKT:135,-40,160,-20,EPSG:4326"^^someDataType # or dcterms?
+  dcat:extent "POLYGON((
+    96.82, -9.14,
+    168.00, -9.14,
+    168.00, -43.74,
+    96.82, -43.74,
+    96.82, -9.14
+  ))"^^geo:WKTLiteral
   .
 
 gl:heatmap a void:TechnicalFeature ;
