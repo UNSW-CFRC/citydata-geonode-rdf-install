@@ -1,27 +1,31 @@
 # Worked example of triples output from:
-# Uploading a dataset,  matching an  attribute to a skos:concept, and identifying the minimum spatial area ID and year
+# Uploading a dataset,  matching an attribute and style to a skos:concept, and identifying the minimum spatial area ID and year
 
-@PREFIX gl: <http://cfdev.intersect.org.au/def/datasets/spatial/> .
-@PREFIX void: <http://rdfs.org/ns/void#> .
-@PREFIX qb: <http://purl.org/linked-data/cube> .
-@PREFIX qb4st: <http://www.w3.org/ns/qb4st/> .
-@PREFIX xsd: <http://www.w3.org/2001/XMLSchema> .
-@PREFIX dcat: <https://www.w3.org/ns/dcat> .
-@PREFIX dcterms: <http://purl.org/dc/terms/> .
-@PREFIX sirf: <http://id.sirf.net/def/schema/sirf-metamodel/> .
-@PREFIX time: <http://www.w3.org/2006/time#> . 
+@prefix gl: <http://cfdev.intersect.org.au/def/datasets/spatial/> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix qb: <http://purl.org/linked-data/cube> .
+@prefix qb4st: <http://www.w3.org/ns/qb4st/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema> .
+@prefix dcat: <https://www.w3.org/ns/dcat> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix sirf: <http://id.sirf.net/def/schema/sirf-metamodel/> .
+#@prefix time: <http://www.w3.org/2006/time#> . 
+@prefix geo: <http://www.opengis.net/ont/geosparql#> .
+@prefix uquol: <http://cfdev.intersect.org.au/def/voc/iso37120/> .
 
 # Newly minted namespaces
 #
-@PREFIX qbx:   <http://cfdev.intersect.org.au/def/qbx> . # Extended qb
-@PREFIX abs:   <http://cfdev.intersect.org.au/def/abs> . # Could be a URIredirect to a geoserver query for now
-@PREFIX absft: <http://cfdev.intersect.org.au/def/absft> . # ABS feature types
-@PREFIX dbf:   <http://cfdev.intersect.org.au/def/dbf> . # Dbase file attributes
+@prefix qbx:   <http://cfdev.intersect.org.au/def/qbx> . # Extended qb
+@prefix abs:   <http://cfdev.intersect.org.au/def/abs> . # Could be a URIredirect to a geoserver query for now
+@prefix absft: <http://cfdev.intersect.org.au/def/absft> . # ABS feature types
+@prefix absareas: <http://cfdev.intersect.org.au/def/absareas> . # holds skos:concepts for all individual SA1s, SA2, SA3s... 
+@prefix dbf:   <http://cfdev.intersect.org.au/def/dbf> . # Dbase file attributes
+@prefix mt: <https://www.iana.org/assignments/media-types/> .
 
 # Dataset: sa2_2016_aust_epsg4326
 # Attribute B02_Medi_1
 # Spatial ID SA2_5DIG16
-# Temporal: 2011 (entered by user from dataset name and/or metadata)
+# Temporal: 2011 (from Temporal Extent in metadata)
 
 gl:sa2_2016_aust_epsg4326 a void:Dataset ; 
   void:feature gl:heatmap ;
@@ -29,18 +33,22 @@ gl:sa2_2016_aust_epsg4326 a void:Dataset ;
   qb:structure gl:sa2_2016_aust_epsg4326_struct;
 
   # Imported from metadata
-  rdfs:label  "Selected Census Medians and Averages for Statistical Areas Level 2 Australia 2011"@en
+  rdfs:label  "Selected Census mtns and Averages for Statistical Areas Level 2 Australia 2011"@en ;
   gl:wxsServer "http://cftest.intersect.org.au/geoserver" ;
   gl:layer "geonode:sa2_2016_aust_epsg4326" ;
-  # Entail:
-  void:vocabulary absAreas: ;
-  dcat:extent "WKT:135,-40,160,-20,EPSG:4326"^^someDataType # or dcterms?
-  . 
+  # Entailed:
+  void:vocabulary absareas: ;
+  dcat:extent "WKT:135,-40,160,-20,EPSG:4326"
+#  dcat:extent "WKT:135,-40,160,-20,EPSG:4326"^^someDataType # or dcterms?
+  .
 
 gl:heatmap a void:TechnicalFeature ;
-  dcterms:hasFormat media:png ;
-  # getBbox, getWidth & getHeight have to be run on client because only client knows shape of map window
-  sirf:urlTemplate "{gl:wxsServer}/wms?SERVICE=WMS&REQUEST=GetMap&LAYERS={gl:layer}&STYLES={qb:structure qb:component gl:prefStyle}&BBOX={getBbox(qb:structure qb4st:SpatialComponentSpecification qb4st:envelope)}&SRS=EPSG%3A4326&format=image%2Fpng&WIDTH={getWidth()}&HEIGHT={getHeight()}"
+  dcterms:hasFormat mt:image_png ;
+
+  # uriTemplate uses IETF RFC 6570
+  # Could pre-process the uriTemplate on server using ietfparse
+  # getBbox, getWidth & getHeight must be run on client which knows shape of map
+  sirf:uriTemplate "{gl:wxsServer}/wms?SERVICE=WMS&REQUEST=GetMap&LAYERS={gl:layer}&STYLES={qb:structure qb:component gl:prefStyle}&BBOX={getBbox(qb:structure qb4st:SpatialComponentSpecification qb4st:envelope)}&SRS=EPSG%3A4326&format=image%2Fpng&WIDTH={getWidth()}&HEIGHT={getHeight()}"
 .
 
 gl:sa2_2016_aust_epsg4326_struct a qb:DataStructureDefinition ;
@@ -51,26 +59,33 @@ gl:sa2_2016_aust_epsg4326_struct a qb:DataStructureDefinition ;
 gl:sa2_2016_aust_epsg4326_spatial a qb4st:SpatialComponentSpecification;    # Entailed
   qb:dimension abs:sa2;
   qbx:attributeName "SA2_5DIG16"^^dbf:AttributeName ;
-  qb4st:envelope "WKT:135,-40,160,-20,EPSG:4326"^^someDataType ;        # Adopt format from geoSPARQL
-  qb4st:subdivides absAreas:SA4-0912309,              # Provide for spatially filtered dataset
-                 absAreas:SA4-567309  .              # qb4st:subdivides will need to allow this OR that
+  qb4st:envelope "POLYGON((
+    96.82, -9.14,
+    168.00, -9.14,
+    168.00, -43.74,
+    96.82, -43.74,
+    96.82, -9.14
+  ))"^^geo:WKTLiteral .
 
-gl:sa2_2016_aust_epsg4326_measure_B02_Medi_1 qb:ComponentSpecification ; 
-  qb:measure uquol:iso37120_15_1_measure ;
+# qb4st:subdivides absareas:SA4-0912309, # Allow spatial filter on dataset
+# absareas:SA4-567309  .   # qb4st:subdivides will need to allow this OR that
+
+gl:sa2_2016_aust_epsg4326_measure_B02_Medi_1 a qb:ComponentSpecification ; 
+  qb:measure uquol:iso37120_15_2_measure ;
   qbx:attributeName "B02_Medi_1"^^dbf:AttributeName ;
   gl:prefStyle "sa2_2016_aust_epsg4326_b98d4473"
   # gl:altStyle ... can add other styles and offer to user to choose 
 .
 
-uquol:iso37120_15_1_measure a qb:Measure ;
-  qb:concept uquol:15.1 ; # Selected by user, from attributes matched to concepts
-  rdfs:label "Slums"@en ; # Entailed from skos:prefLabel
+uquol:iso37120_15_2_measure a qb:Measure ;
+  qb:concept uquol:15.2 ; # Selected by user, from attributes matched to concepts
+  rdfs:label "Homeless"@en ; # Entailed from skos:prefLabel
   rdfs:range xsd:Real .
 
 gl:sa2_2016_aust_epsg4326_temporal a qb4st:TemporalComponentSpecification;    # Entailed
   qb:dimension abs:year;
-  qb4st:envelopeStart 2016^^iso8601Date ;
-  qb4st:envelopeEnd 2016^^iso8601Date .
+  qb4st:envelopeStart "2011"^^xsd:gYear ;
+  qb4st:envelopeEnd "2011"^^xsd:gYear .
 
 # -----------------------------------------
 # Underlying rules:
@@ -78,9 +93,8 @@ abs:sa2 a qb:Dimension,
   qb4st:refArea ;
   qb:concept uquol:sa2 ;  # Need to populate SA* concepts with broader/narrower
   a qb:codedProperty ;      # Entailed from refArea
-  qb:codeList absAreas: ;  # absAreas: holds skos:concepts for all the individual SA1s, SA2, SA3s... 
-  rdfs:range absft:sa2Type .        # Selects type (i.e. SA2) from the abs:statArea list
-
+  qb:codeList absareas: ;
+  rdfs:range absft:sa2Type .        # Selects type (i.e. SA2) from absareas:
 abs:year a qb:Dimension,
            qb4st:TemporalProperty ;
   rdfs:range xsd:gYear ;
