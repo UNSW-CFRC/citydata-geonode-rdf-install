@@ -11,6 +11,7 @@
 #@prefix time: <http://www.w3.org/2006/time#> . 
 @prefix geo: <http://www.opengis.net/ont/geosparql#> .
 #@prefix mt: <https://www.iana.org/assignments/media-types/> .
+@prefix spar: <https://w3id.org/spar/mediatype/> .
 
 # Local namespaces
 #
@@ -50,7 +51,9 @@ gl:sa2_2016_aust_epsg4326 a void:Dataset ;
   .
 
 gl:heatmap a void:TechnicalFeature ;
-  dcterms:hasFormat mt:image_png ;
+#  dcterms:hasFormat "png"^^mt:imageType ;
+#  dcterms:hasFormat <https://w3id.org/spar/mediatype/image/png> ;
+  dcterms:hasFormat spar:image\/png ;
 
   # uriTemplate uses IETF RFC 6570
   # Could pre-process the uriTemplate on server using ietfparse
