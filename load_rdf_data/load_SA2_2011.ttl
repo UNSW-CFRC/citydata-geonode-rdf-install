@@ -1,7 +1,6 @@
 # Worked example of triples output from:
 # Uploading a dataset,  matching an attribute and style to a skos:concept, and identifying the minimum spatial area ID and year
 
-@prefix gl: <http://cfdev.intersect.org.au/def/datasets/spatial/> .
 @prefix void: <http://rdfs.org/ns/void#> .
 @prefix qb: <http://purl.org/linked-data/cube#> .
 @prefix qb4st: <http://www.w3.org/ns/qb4st/> .
@@ -11,16 +10,19 @@
 @prefix sirf: <http://id.sirf.net/def/schema/sirf-metamodel/> .
 #@prefix time: <http://www.w3.org/2006/time#> . 
 @prefix geo: <http://www.opengis.net/ont/geosparql#> .
-@prefix uquol: <http://cfdev.intersect.org.au/def/voc/iso37120/> .
+#@prefix mt: <https://www.iana.org/assignments/media-types/> .
 
-# Newly minted namespaces
+# Local namespaces
 #
-@prefix qbx:   <http://cfdev.intersect.org.au/def/qbx/> . # Extended qb
-@prefix abs:   <http://cfdev.intersect.org.au/def/abs/> . # Could be a URIredirect to a geoserver query for now
-@prefix absft: <http://cfdev.intersect.org.au/def/absft/> . # ABS feature types
-@prefix absareas: <http://cfdev.intersect.org.au/def/absareas/> . # holds skos:concepts for all individual SA1s, SA2, SA3s... 
-@prefix dbf:   <http://cfdev.intersect.org.au/def/dbf/> . # Dbase file attributes
-@prefix mt: <https://www.iana.org/assignments/media-types/> .
+@base <http://cfdev.intersect.org.au/def/> .
+
+@prefix gl: <datasets/spatial/> .
+@prefix uquol: <voc/iso37120/> .
+@prefix qbx:   <qbx/> . # Extended qb
+@prefix abs:   <abs/> . # Could be a URIredirect to a geoserver query for now
+@prefix absft: <absft/> . # ABS feature types
+@prefix absareas: <absareas/> . # holds skos:concepts for all individual SA1s, SA2, SA3s... 
+@prefix dbf:   <dbf/> . # Dbase file attributes
 
 # Dataset: sa2_2016_aust_epsg4326
 # Attribute B02_Medi_1
