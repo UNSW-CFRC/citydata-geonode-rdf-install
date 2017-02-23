@@ -147,4 +147,5 @@ uadi:graphViewer a api:Viewer;
 
 uadi:mapViewer a api:Viewer;
     api:name "Properties returned in map view";
-    api:property gl:wxsServer, gl:layer, dcat:extent  .
+    api:property gl:wxsServer, gl:layer, dcat:extent,
+      (qb:structure qb:component gl:prefStyle)  . # Issue: this will get ANY style on this dataset. I only want the style associated with this concept.
