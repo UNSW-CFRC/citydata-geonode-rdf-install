@@ -29,21 +29,14 @@
 @prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
-@prefix dcat: <https://www.w3.org/ns/dcat#> .
 
 @prefix lid:    <http://id.sirf.net/def/schema/lid/> .
 @prefix void: <http://rdfs.org/ns/void#> .
 @prefix qb: <http://purl.org/linked-data/cube#> .
 # Data network API
 @prefix sirf: <http://id.sirf.net/def/schema/sirf-metamodel/> .
-
-# These two break if made relative to @base:
+@prefix uadi:    <http://cfdev.intersect.org.au/def/api/uadi#> .
 @prefix uquol: 	<http://cfdev.intersect.org.au/def/voc/iso37120/> .
-@prefix gl: <http://cfdev.intersect.org.au/def/datasets/spatial/> .
-
-@base <http://cfdev.intersect.org.au/def/> .
-#
-@prefix uadi:  <api/uadi#> .
 
 # must import the api for the LID spec because as an API this has the responsibility to advertise itself as an endpoint
 
@@ -75,76 +68,35 @@ uadi:api a api:API;
 	   api:variable [api:name "searchTargetLabel"; api:value "Find Dataset"];
 	   api:variable [api:name "searchTarget"; api:value "dna/finddataset"];
 	   
-    api:endpoint uadi:node, uadi:graph, uadi:map ;
-    rdfs:label "UADI API"@en;
+    api:endpoint uadi:node ;
+    rdfs:label "UADI node"@en;
     foaf:primaryTopic <http://sirf.net/>;
     rdfs:seeAlso <http://portal.sirf.net/>;
 
-	api:sparqlEndpoint <http://cfdev.intersect.org.au:8080/rdf4j-server/repositories/uquol>
+	api:sparqlEndpoint <http://localhost:8080/rdf4j-server/repositories/uquol>
     .
 
-<http://cfdev.intersect.org.au:8080/rdf4j-server/repositories/uquol> elda:supportsNestedSelect true .
+<http://localhost:8080/rdf4j-server/repositories/uquol> elda:supportsNestedSelect true .
 
 uadi:node a api:ListEndpoint;
     rdfs:label "UQUOL concept and parent";
     rdfs:comment "Returns a concept in the UQUOL scheme, plus its parent concept";
-    api:exampleRequestPath "/node?concept=Homeless";
+    api:exampleRequestPath "/dna/node?concept=Homeless";
     api:uriTemplate "/node?concept={concept}";
     api:selector [
         api:where
           """SELECT ?item
           WHERE {
               ?item a skos:concept;
-                    skos:inScheme uquol: ;
+                    skos:inScheme uquol:
                     skos:prefLabel ?x FILTER(str(?x) = ?concept) .
           }""";
         ];
         api:defaultViewer uadi:graphViewer;
     .
 
-uadi:graph a api:ListEndpoint;
-    rdfs:label "Complete UQUOL graph";
-    rdfs:comment "Returns an array of all nodes within the uquol scheme";
-    api:exampleRequestPath "/graph";
-    api:uriTemplate "/graph";
-    api:selector [
-        api:where
-          """SELECT ?item
-          WHERE {
-              ?item a skos:concept;
-                    skos:inScheme uquol:
-          }""";
-        ];
-        api:defaultViewer uadi:graphViewer;
-    .
-
-uadi:map a api:ListEndpoint;
-    rdfs:label "Map a concept";
-    rdfs:comment "Returns properties of datasets with a heatmap technical feature, to generate a WMS request for a default choropleth map of a concept";
-    api:exampleRequestPath "/map?concept=Homeless";
-    api:uriTemplate "/map?concept={concept}";
-    api:selector [
-        api:where
-          """SELECT DISTINCT ?item
-          WHERE {
-              ?item a void:Dataset ; 
-                    void:feature gl:heatmap ;
-                    qb:structure ?struct .
-              ?struct qb:component ?dsMeasure .
-              ?dsMeasure qb:measure ?measure .
-              ?measure qb:concept ?conceptId .
-              ?conceptId skos:prefLabel ?x FILTER(str(?x) = ?concept) .
-          }""";
-        ];
-        api:defaultViewer uadi:mapViewer;
-    .
-
 # CUSTOM VIEWERS:
 
 uadi:graphViewer a api:Viewer;
-    api:name "Properties returned in graph view";
+    api:name "Resources for item";
     api:property skos:prefLabel, skos:topConceptOf, (skos:broader skos:prefLabel)   .
-
-uadi:mapViewer a api:Viewer;
-    api:name "Properties returned in map view";
-    api:property gl:wxsServer, gl:layer, dcat:extent  .
