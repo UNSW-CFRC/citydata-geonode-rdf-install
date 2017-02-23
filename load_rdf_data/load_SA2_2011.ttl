@@ -64,7 +64,7 @@ gl:heatmap a void:TechnicalFeature ;
 gl:sa2_2016_aust_epsg4326_struct a qb:DataStructureDefinition ;
   qb:component gl:sa2_2016_aust_epsg4326_spatial ;
   qb:component gl:sa2_2016_aust_epsg4326_temporal ;
-  qb:component gl:sa2_2016_aust_epsg4326_B02_Medi_1 . # From attributes flagged for use by user
+  qb:component gl:sa2_2016_aust_epsg4326_measure_B02_Medi_1 . # From attributes flagged for use by user
 
 gl:sa2_2016_aust_epsg4326_spatial a qb4st:SpatialComponentSpecification;    # Entailed
   qb:dimension abs:sa2;

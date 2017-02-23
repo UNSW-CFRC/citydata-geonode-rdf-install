@@ -35,7 +35,8 @@
 @prefix qb: <http://purl.org/linked-data/cube#> .
 # Data network API
 @prefix sirf: <http://id.sirf.net/def/schema/sirf-metamodel/> .
-@prefix uadi:    <http://cftest.intersect.org.au/def/api/uadi#> .
+@prefix uadi:    <http://cfdev.intersect.org.au/def/api/uadi#> .
+@prefix uquol: 	<http://cfdev.intersect.org.au/def/voc/iso37120/> .
 
 # must import the api for the LID spec because as an API this has the responsibility to advertise itself as an endpoint
 
@@ -57,7 +58,7 @@ uadi:api a api:API;
         [api:name "SISSDefaultResourceDirBase"; api:value "{webapp}/lda-assets/resources/siss-default/"],
         [api:name "_resourceRoot"; api:value "{webapp}/"],
         [api:name "myResourceDirBase"; api:value "{webapp}/lda-assets/resources/dna/"],
-        [api:name "serviceTitle"; api:value "SIRF Data Network API"],
+        [api:name "serviceTitle"; api:value "UADI API"],
         [api:name "serviceAuthor"; api:value "Rob Atkinson"],
         [api:name "serviceAuthorEmail"; api:value "rob.atkinson@csiro.au"],
         [api:name "serviceHomePage"; api:value "http://sirf.net"];
@@ -67,82 +68,35 @@ uadi:api a api:API;
 	   api:variable [api:name "searchTargetLabel"; api:value "Find Dataset"];
 	   api:variable [api:name "searchTarget"; api:value "dna/finddataset"];
 	   
-    api:endpoint uadi:test ;
-    rdfs:label "SIRF Data Network API"@en;
+    api:endpoint uadi:node ;
+    rdfs:label "UADI node"@en;
     foaf:primaryTopic <http://sirf.net/>;
     rdfs:seeAlso <http://portal.sirf.net/>;
 
-	api:sparqlEndpoint <http://cfdev.intersect.org.au:8080/rdf4j-server/repositories/uquol>
+	api:sparqlEndpoint <http://localhost:8080/rdf4j-server/repositories/uquol>
     .
 
-<http://cfdev.intersect.org.au:8080/rdf4j-server/repositories/uquol> elda:supportsNestedSelect true .
+<http://localhost:8080/rdf4j-server/repositories/uquol> elda:supportsNestedSelect true .
 
-uadi:test a api:ListEndpoint;
-    rdfs:label "SIset (Gazetteers) list";
-    rdfs:comment "Provides a list of registered SISets (Spatial Identifier Sets - datasets containing, and acting as registers of spatial object definitions";
-    api:exampleRequestPath "/dna/sisets";
-    api:uriTemplate "/test?concept={concept}";
+uadi:node a api:ListEndpoint;
+    rdfs:label "UQUOL concept and parent";
+    rdfs:comment "Returns a concept in the UQUOL scheme, plus its parent concept";
+    api:exampleRequestPath "/dna/node?concept=Homeless";
+    api:uriTemplate "/node?concept={concept}";
     api:selector [
         api:where
-          """SELECT DISTINCT ?item WHERE { ?item qb:concept ?concept }""";
+          """SELECT ?item
+          WHERE {
+              ?item a skos:concept;
+                    skos:inScheme uquol:
+                    skos:prefLabel ?x FILTER(str(?x) = ?concept) .
+          }""";
         ];
-     api:sort "label"	;
-        api:defaultViewer uadi:basicNetworkViewer;
+        api:defaultViewer uadi:graphViewer;
     .
 
 # CUSTOM VIEWERS:
 
-uadi:basicNetworkViewer a api:Viewer;
+uadi:graphViewer a api:Viewer;
     api:name "Resources for item";
-    api:property rdfs:label, rdfs:comment, rdfs:seeAlso, dcterms:date,  dcterms:publisher, ( dcterms:subject  skos:prefLabel )  .
-
-uadi:linkedSetsViewer a api:Viewer;
-    api:name "Potential links for item";
-    rdfs:comment "Identifies linksets related to a target dataset" ;
-    api:include uadi:basicNetworkViewer;
-    api:property void:entities, (void:linkPredicate rdfs:label), (void:objectsTarget), (void:objectsTarget rdfs:label), (void:objectsTarget void:entities), (void:objectsTarget void:uriSpace), void:entities , (void:subjectsTarget void:entities); 
-    .
-
-uadi:linkedDatasetsViewer a api:Viewer;
-    api:name "Potential links for related data (for a given item) via external APIs";
-    api:include uadi:basicNetworkViewer;
-    api:property (void:feature rdfs:label), void:exampleResource ,
-	 (void:feature rdfs:comment),
-    (void:feature sirf:urlTemplate), 
-    (void:feature lid:featurescope), 
-    (qb:structure qb:component rdfs:label ),    (qb:structure qb:component rdfs:range rdfs:label),    (qb:structure qb:component qb:concept skos:prefLabel )    ,
-    (qb:structure qb:component  qb:codeList rdfs:label )
-    ;
-
-    .
-
-
-# VOCABULARY
-#
-
-dcterms:licence
-    a rdfs:Property;
-    api:label "DataLicence"@en;
-    rdfs:label "Data Licence"@en;
-    .
-
-dcterms:publisher
-    a rdfs:Property;
-    api:label "Publisher"@en;
-    rdfs:label "Publisher"@en;
-    .
-
-dcterms:date
-    a rdfs:Property;
-    api:label "Date"@en;
-    rdfs:label "Date"@en;
-    .
-void:classPartition
-    a rdfs:Property;
-    api:label "ThematicSubset"@en;
-    .
-
-void:feature     a rdfs:Property;
-    api:label "Access"@en;
-    rdfs:label "Access"@en;
-    .
+    api:property skos:prefLabel, skos:topConceptOf, (skos:broader skos:prefLabel)   .

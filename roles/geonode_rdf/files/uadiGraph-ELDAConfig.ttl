@@ -35,7 +35,8 @@
 @prefix qb: <http://purl.org/linked-data/cube#> .
 # Data network API
 @prefix sirf: <http://id.sirf.net/def/schema/sirf-metamodel/> .
-@prefix uadi:    <http://cftest.intersect.org.au/def/api/uadi#> .
+@prefix uadi:    <http://cfdev.intersect.org.au/def/api/uadi#> .
+@prefix uquol: 	<http://cfdev.intersect.org.au/def/voc/iso37120/> .
 
 # must import the api for the LID spec because as an API this has the responsibility to advertise itself as an endpoint
 
@@ -58,36 +59,36 @@ uadi:api a api:API;
         [api:name "_resourceRoot"; api:value "{webapp}/"],
         [api:name "myResourceDirBase"; api:value "{webapp}/lda-assets/resources/dna/"],
         [api:name "serviceTitle"; api:value "UADI API"],
-        [api:name "serviceAuthor"; api:value "Rob Atkinson"],
-        [api:name "serviceAuthorEmail"; api:value "rob.atkinson@csiro.au"],
-        [api:name "serviceHomePage"; api:value "http://sirf.net"];
+        [api:name "serviceAuthor"; api:value "Jonathan Doig"],
+        [api:name "serviceAuthorEmail"; api:value "j.doig@unsw.edu.au"],
+        [api:name "serviceHomePage"; api:value "http://cfdev.intersect.org.au:8080/dna/meta/"];
 		#
 		# set up default searches for this - in XSL form
 		#
 	   api:variable [api:name "searchTargetLabel"; api:value "Find Dataset"];
 	   api:variable [api:name "searchTarget"; api:value "dna/finddataset"];
 	   
-    api:endpoint uadi:test ;
-    rdfs:label "SIRF Data Network API"@en;
-    foaf:primaryTopic <http://sirf.net/>;
-    rdfs:seeAlso <http://portal.sirf.net/>;
+    api:endpoint uadi:graph ;
+    rdfs:label "UADI graph"@en;
+#    foaf:primaryTopic <http://sirf.net/>;
+#    rdfs:seeAlso <http://portal.sirf.net/>;
 
 	api:sparqlEndpoint <http://localhost:8080/rdf4j-server/repositories/uquol>
     .
 
 <http://localhost:8080/rdf4j-server/repositories/uquol> elda:supportsNestedSelect true .
 
-uadi:test a api:ListEndpoint;
-    rdfs:label "SIset (Gazetteers) list";
-    rdfs:comment "Provides a list of registered SISets (Spatial Identifier Sets - datasets containing, and acting as registers of spatial object definitions";
-    api:exampleRequestPath "/dna/sisets";
-    api:uriTemplate "/test?concept={concept}";
+uadi:graph a api:ListEndpoint;
+    rdfs:label "Complete UQUOL graph";
+    rdfs:comment "Provides an array of nodes within the uquol scheme.";
+    api:exampleRequestPath "/dna/graph";
+    api:uriTemplate "/graph";
     api:selector [
         api:where
           """SELECT ?item
           WHERE {
               ?item a skos:concept;
-                    skos:prefLabel ?x FILTER(str(?x) = ?concept) .
+                    skos:inScheme uquol:
           }""";
         ];
         api:defaultViewer uadi:graphViewer;
@@ -97,4 +98,6 @@ uadi:test a api:ListEndpoint;
 
 uadi:graphViewer a api:Viewer;
     api:name "Resources for item";
-    api:property skos:prefLabel, skos:topConceptOf, (skos:broader skos:prefLabel)   .
+    api:property skos:prefLabel, skos:topConceptOf   .
+#    api:property skos:prefLabel, skos:topConceptOf, skos:definition   .
+#    api:property skos:prefLabel, skos:topConceptOf, (skos:broader skos:prefLabel)   .
