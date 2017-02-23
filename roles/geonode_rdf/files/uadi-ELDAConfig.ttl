@@ -37,11 +37,13 @@
 # Data network API
 @prefix sirf: <http://id.sirf.net/def/schema/sirf-metamodel/> .
 
-@base <http://cfdev.intersect.org.au/def/> .
+# These two break if made relative to @base:
+@prefix uquol: 	<http://cfdev.intersect.org.au/def/voc/iso37120/> .
+@prefix gl: <http://cfdev.intersect.org.au/def/datasets/spatial/> .
 
+@base <http://cfdev.intersect.org.au/def/> .
+#
 @prefix uadi:  <api/uadi#> .
-@prefix uquol: 	<voc/iso37120/> .
-@prefix gl: <datasets/spatial/> .
 
 # must import the api for the LID spec because as an API this has the responsibility to advertise itself as an endpoint
 
@@ -123,7 +125,7 @@ uadi:map a api:ListEndpoint;
     api:uriTemplate "/map?concept={concept}";
     api:selector [
         api:where
-          """SELECT ?item
+          """SELECT DISTINCT ?item
           WHERE {
               ?item a void:Dataset ; 
                     void:feature gl:heatmap ;
