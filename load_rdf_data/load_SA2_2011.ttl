@@ -41,13 +41,7 @@ gl:sa2_2016_aust_epsg4326 a void:Dataset ;
   gl:layer "geonode:sa2_2016_aust_epsg4326" ;
   # Entailed:
   void:vocabulary absareas: ;
-  dcat:extent "POLYGON((
-    96.82, -9.14,
-    168.00, -9.14,
-    168.00, -43.74,
-    96.82, -43.74,
-    96.82, -9.14
-  ))"^^geo:WKTLiteral
+  dcat:extent "POLYGON((96.82,-9.14, 168.00,-9.14, 168.00,-43.74, 96.82,-43.74, 96.82,-9.14))"^^geo:WKTLiteral
   .
 
 gl:heatmap a void:TechnicalFeature ;
@@ -69,13 +63,7 @@ gl:sa2_2016_aust_epsg4326_struct a qb:DataStructureDefinition ;
 gl:sa2_2016_aust_epsg4326_spatial a qb4st:SpatialComponentSpecification;    # Entailed
   qb:dimension abs:sa2;
   qbx:attributeName "SA2_5DIG16"^^dbf:AttributeName ;
-  qb4st:envelope "POLYGON((
-    96.82, -9.14,
-    168.00, -9.14,
-    168.00, -43.74,
-    96.82, -43.74,
-    96.82, -9.14
-  ))"^^geo:WKTLiteral .
+  qb4st:envelope "POLYGON((96.82,-9.14, 168.00,-9.14, 168.00,-43.74, 96.82,-43.74, 96.82,-9.14))"^^geo:WKTLiteral . # Entailed from Dataset extent
 
 # qb4st:subdivides absareas:SA4-0912309, # Allow spatial filter on dataset
 # absareas:SA4-567309  .   # qb4st:subdivides will need to allow this OR that
