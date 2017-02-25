@@ -1,0 +1,30 @@
+---
+- name: Create images folder
+  file:
+    path: '{{ uploaded_path }}/images'
+    state: directory
+    mode: a=rwx
+  become: true
+
+- name: Change owner and group of static and uploaded directories
+  file:
+    path: '{{ uploaded_path }}/images'
+    state: directory
+    owner: geonode
+    group: www-data
+  become: true
+
+- name: serve images folder
+  blockinfile:
+    marker: '# {mark} ANSIBLE MANAGED BLOCK'
+    dest: /etc/apache2/sites-available/geonode.conf
+    insertbefore: "<Proxy .*>"
+    block: |
+      <Directory "{{ uploaded_path }}/images/">
+          Order allow,deny
+          Options -Indexes +FollowSymLinks
+          Allow from all
+          Require all granted
+      </Directory>
+  become: true
+  notify: Restart Apache

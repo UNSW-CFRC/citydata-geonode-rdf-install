@@ -1,0 +1,8 @@
+---
+- name: Create and serve folder for images (...later load content)
+  hosts: '{{ host }}'
+  become: true
+  vars_files:
+    - host_vars/base.yml
+  roles:
+    - load_images

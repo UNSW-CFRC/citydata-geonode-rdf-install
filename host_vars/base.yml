@@ -9,13 +9,16 @@ package: geonode
 
 #mapstory_branch: master
 
-top_project: '~{{ application_user }}'
+top_project: '/mnt/data/{{ application_user }}'
 
 # Django project path
 project_path: '{{ top_project }}/{{ git_repo }}'
 
 # Initial path for (local) settings file
 settings_path: '{{ project_path }}/{{ project }}'
+
+# Path for uploaded subfolders
+uploaded_path: '{{ project_path }}/{{ project }}/uploaded'
 
 # web_server: nginx
 web_server: apache2
