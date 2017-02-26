@@ -52,7 +52,7 @@ gl:heatmap a void:TechnicalFeature ;
   # uriTemplate uses IETF RFC 6570
   # Could pre-process the uriTemplate on server using ietfparse
   # getBbox, getWidth & getHeight must be run on client which knows shape of map
-  sirf:uriTemplate "{gl:wxsServer}/wms?SERVICE=WMS&REQUEST=GetMap&LAYERS={gl:layer}&STYLES={qb:structure qb:component gl:prefStyle}&BBOX={getBbox(qb:structure qb4st:SpatialComponentSpecification qb4st:envelope)}&SRS=EPSG%3A4326&format=image%2Fpng&WIDTH={getWidth()}&HEIGHT={getHeight()}"
+  sirf:uriTemplate "{gl:wxsServer}/wms?SERVICE=WMS&REQUEST=GetMap&LAYERS={gl:layer}&STYLES={qb:structure qb:component gl:prefStyle}&BBOX={getBbox(qb:structure qb4st:SpatialComponentSpecification qb4st:envelope)}&SRS=EPSG%3A4326&format=image%2Fpng&WIDTH={getWidth()}&HEIGHT={getHeight()}&TRANSPARENT=True"
 .
 
 gl:Census_2011_SA2_struct a qb:DataStructureDefinition ;
