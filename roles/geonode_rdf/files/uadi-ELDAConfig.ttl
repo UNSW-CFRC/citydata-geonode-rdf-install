@@ -1,42 +1,20 @@
 ##############################################################
 #
-# Configuration to expose a graph of relationships between spatial reference sources and online resource APIs using these identifiers.
-#
-# Author: Rob Atkinson, CSIRO
-#
-#
-# Copyright (c) CSIRO 2012
-# Re-use permitted according to Creative Commons Attribution 3.0 Australia (CC BY 3.0)
-# see <http://creativecommons.org/licenses/by/3.0/au/>
-#
-# Contact: Robert A Atkinson
-#          CSIRO Land and Water
-#          Australia
-#          rob.atkinson "at" csiro.au
-#
-# imports the LID metadata spec - ability to specify what reosurces are available for a given object
+# Configuration for UADI Linked Data API.
 #
 ##############################################################
 
-## Common prefixes - don't change these.
+# Common prefixes
 @prefix api:     <http://purl.org/linked-data/api/vocab#> .
-@prefix dc:      <http://purl.org/dc/elements/1.1/> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix dcmiType: <http://purl.org/dc/dcmitype/> .
 @prefix elda:    <http://www.epimorphics.com/vocabularies/lda#> .
-@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
-@prefix owl:     <http://www.w3.org/2002/07/owl#> .
-@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
 @prefix dcat: <https://www.w3.org/ns/dcat#> .
-
-@prefix lid:    <http://id.sirf.net/def/schema/lid/> .
 @prefix void: <http://rdfs.org/ns/void#> .
 @prefix qb: <http://purl.org/linked-data/cube#> .
-# Data network API
-@prefix sirf: <http://id.sirf.net/def/schema/sirf-metamodel/> .
 
 # These two break if made relative to @base:
 @prefix uquol: 	<http://cfdev.intersect.org.au/def/voc/iso37120/> .
@@ -47,9 +25,7 @@
 @prefix uadi:  <api/uadi#> .
 @prefix skosimg: <image/> .
 
-# must import the api for the LID spec because as an API this has the responsibility to advertise itself as an endpoint
-
-# and a basic API...
+# API spec
 #
 uadi:api a api:API;
     api:maxPageSize "1000";
@@ -68,19 +44,13 @@ uadi:api a api:API;
         [api:name "_resourceRoot"; api:value "{webapp}/"],
         [api:name "myResourceDirBase"; api:value "{webapp}/lda-assets/resources/dna/"],
         [api:name "serviceTitle"; api:value "UADI API"],
-        [api:name "serviceAuthor"; api:value "Rob Atkinson"],
-        [api:name "serviceAuthorEmail"; api:value "rob.atkinson@csiro.au"],
-        [api:name "serviceHomePage"; api:value "http://sirf.net"];
-		#
-		# set up default searches for this - in XSL form
-		#
-	   api:variable [api:name "searchTargetLabel"; api:value "Find Dataset"];
-	   api:variable [api:name "searchTarget"; api:value "dna/finddataset"];
-	   
+        [api:name "serviceAuthor"; api:value "Jonathan Doig"],
+        [api:name "serviceAuthorEmail"; api:value "j.doig@unsw.edu.au"],
+        [api:name "serviceHomePage"; api:value "http://cfdev.intersect.org.au:8080/dna/meta/"];
+
     api:endpoint uadi:node, uadi:nodes, uadi:links, uadi:map, uadi:images ;
+
     rdfs:label "UADI API"@en;
-    foaf:primaryTopic <http://sirf.net/>;
-    rdfs:seeAlso <http://portal.sirf.net/>;
 
 	api:sparqlEndpoint <http://cfdev.intersect.org.au:8080/rdf4j-server/repositories/uquol>
     .
