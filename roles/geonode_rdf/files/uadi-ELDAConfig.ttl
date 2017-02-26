@@ -112,6 +112,7 @@ uadi:graph a api:ListEndpoint;
           """SELECT ?item
           WHERE {
               ?item a skos:concept;
+                    skos:broader ?parent;
                     skos:inScheme uquol:
           }""";
         ];
