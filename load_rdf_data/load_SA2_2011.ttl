@@ -25,20 +25,20 @@
 @prefix absareas: <absareas/> . # holds skos:concepts for all individual SA1s, SA2, SA3s... 
 @prefix dbf:   <dbf/> . # Dbase file attributes
 
-# Dataset: sa2_2016_aust_epsg4326
-# Attribute B02_Medi_1
-# Spatial ID SA2_5DIG16
+# Dataset: Census_2011_SA2
+# Attribute ISO_15_2
+# Spatial ID SA2_5DIG11
 # Temporal: 2011 (from Temporal Extent in metadata)
 
-gl:sa2_2016_aust_epsg4326 a void:Dataset ; 
+gl:Census_2011_SA2 a void:Dataset ; 
   void:feature gl:heatmap ;
   # Generated from layer ID
-  qb:structure gl:sa2_2016_aust_epsg4326_struct;
+  qb:structure gl:Census_2011_SA2_struct;
 
   # Imported from metadata
   rdfs:label  "Selected Census mtns and Averages for Statistical Areas Level 2 Australia 2011"@en ;
   gl:wxsServer "http://cftest.intersect.org.au/geoserver" ;
-  gl:layer "geonode:sa2_2016_aust_epsg4326" ;
+  gl:layer "geonode:Census_2011_SA2" ;
   # Entailed:
   void:vocabulary absareas: ;
   dcat:extent "POLYGON((96.82,-9.14, 168.00,-9.14, 168.00,-43.74, 96.82,-43.74, 96.82,-9.14))"^^geo:WKTLiteral
@@ -55,32 +55,31 @@ gl:heatmap a void:TechnicalFeature ;
   sirf:uriTemplate "{gl:wxsServer}/wms?SERVICE=WMS&REQUEST=GetMap&LAYERS={gl:layer}&STYLES={qb:structure qb:component gl:prefStyle}&BBOX={getBbox(qb:structure qb4st:SpatialComponentSpecification qb4st:envelope)}&SRS=EPSG%3A4326&format=image%2Fpng&WIDTH={getWidth()}&HEIGHT={getHeight()}"
 .
 
-gl:sa2_2016_aust_epsg4326_struct a qb:DataStructureDefinition ;
-  qb:component gl:sa2_2016_aust_epsg4326_spatial ;
-  qb:component gl:sa2_2016_aust_epsg4326_temporal ;
-  qb:component gl:sa2_2016_aust_epsg4326_measure_B02_Medi_1 . # From attributes flagged for use by user
+gl:Census_2011_SA2_struct a qb:DataStructureDefinition ;
+  qb:component gl:Census_2011_SA2_spatial ;
+  qb:component gl:Census_2011_SA2_temporal ;
+  qb:component gl:Census_2011_SA2_measure_ISO_15_2 . # From attributes flagged for use by user
 
-gl:sa2_2016_aust_epsg4326_spatial a qb4st:SpatialComponentSpecification;    # Entailed
+gl:Census_2011_SA2_spatial a qb4st:SpatialComponentSpecification;    # Entailed
   qb:dimension abs:sa2;
-  qbx:attributeName "SA2_5DIG16"^^dbf:AttributeName ;
+  qbx:attributeName "SA2_5DIG11"^^dbf:AttributeName ;
   qb4st:envelope "POLYGON((96.82,-9.14, 168.00,-9.14, 168.00,-43.74, 96.82,-43.74, 96.82,-9.14))"^^geo:WKTLiteral . # Entailed from Dataset extent
 
 # qb4st:subdivides absareas:SA4-0912309, # Allow spatial filter on dataset
 # absareas:SA4-567309  .   # qb4st:subdivides will need to allow this OR that
 
-gl:sa2_2016_aust_epsg4326_measure_B02_Medi_1 a qb:ComponentSpecification ; 
+gl:Census_2011_SA2_measure_ISO_15_2 a qb:ComponentSpecification ; 
   qb:measure uquol:iso37120_15_2_measure ;
-  qbx:attributeName "B02_Medi_1"^^dbf:AttributeName ;
-  gl:prefStyle "sa2_2016_aust_epsg4326_b98d4473"
+  qbx:attributeName "ISO_15_2"^^dbf:AttributeName ;
+  gl:prefStyle "Census_2011_SA2_1f90f333" .
   # gl:altStyle ... can add other styles and offer to user to choose 
-.
 
 uquol:iso37120_15_2_measure a qb:Measure ;
   qb:concept uquol:15.2 ; # Selected by user, from attributes matched to concepts
   rdfs:label "Homeless"@en ; # Entailed from skos:prefLabel
   rdfs:range xsd:Real .
 
-gl:sa2_2016_aust_epsg4326_temporal a qb4st:TemporalComponentSpecification;    # Entailed
+gl:Census_2011_SA2_temporal a qb4st:TemporalComponentSpecification;    # Entailed
   qb:dimension abs:year;
   qb4st:envelopeStart "2011"^^xsd:gYear ;
   qb4st:envelopeEnd "2011"^^xsd:gYear .
