@@ -22,6 +22,7 @@
 @prefix api:     <http://purl.org/linked-data/api/vocab#> .
 @prefix dc:      <http://purl.org/dc/elements/1.1/> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dcmiType: <http://purl.org/dc/dcmitype/> .
 @prefix elda:    <http://www.epimorphics.com/vocabularies/lda#> .
 @prefix foaf:    <http://xmlns.com/foaf/0.1/> .
 @prefix owl:     <http://www.w3.org/2002/07/owl#> .
@@ -44,6 +45,7 @@
 @base <http://cfdev.intersect.org.au/def/> .
 #
 @prefix uadi:  <api/uadi#> .
+@prefix skosimg: <image/> .
 
 # must import the api for the LID spec because as an API this has the responsibility to advertise itself as an endpoint
 
@@ -75,7 +77,7 @@ uadi:api a api:API;
 	   api:variable [api:name "searchTargetLabel"; api:value "Find Dataset"];
 	   api:variable [api:name "searchTarget"; api:value "dna/finddataset"];
 	   
-    api:endpoint uadi:node, uadi:graph, uadi:map ;
+    api:endpoint uadi:node, uadi:nodes, uadi:links, uadi:map, uadi:images ;
     rdfs:label "UADI API"@en;
     foaf:primaryTopic <http://sirf.net/>;
     rdfs:seeAlso <http://portal.sirf.net/>;
@@ -99,14 +101,30 @@ uadi:node a api:ListEndpoint;
                     skos:prefLabel ?x FILTER(str(?x) = ?concept) .
           }""";
         ];
-        api:defaultViewer uadi:graphViewer;
+        api:defaultViewer uadi:linksViewer;
     .
 
-uadi:graph a api:ListEndpoint;
-    rdfs:label "Complete UQUOL graph";
+uadi:nodes a api:ListEndpoint;
+    rdfs:label "Array of all nodes";
     rdfs:comment "Returns an array of all nodes within the uquol scheme";
-    api:exampleRequestPath "/graph";
-    api:uriTemplate "/graph";
+    api:exampleRequestPath "/nodes";
+    api:uriTemplate "/nodes";
+    api:selector [
+        api:where
+          """SELECT ?item
+          WHERE {
+              ?item a skos:concept;
+                    skos:inScheme uquol:
+          }""";
+        ];
+        api:defaultViewer uadi:nodesViewer;
+    .
+
+uadi:links a api:ListEndpoint;
+    rdfs:label "Array of all links";
+    rdfs:comment "Returns an array of all links within the uquol scheme";
+    api:exampleRequestPath "/links";
+    api:uriTemplate "/links";
     api:selector [
         api:where
           """SELECT ?item
@@ -116,7 +134,8 @@ uadi:graph a api:ListEndpoint;
                     skos:inScheme uquol:
           }""";
         ];
-        api:defaultViewer uadi:graphViewer;
+        api:defaultViewer uadi:linksViewer;
+        api:viewer uadi:linksViewer, uadi:nodesViewer;
     .
 
 uadi:map a api:ListEndpoint;
@@ -140,13 +159,45 @@ uadi:map a api:ListEndpoint;
         api:defaultViewer uadi:mapViewer;
     .
 
+uadi:images a api:ListEndpoint;
+    rdfs:label "Images about a concept";
+    rdfs:comment "Returns an array of images about a concept";
+    api:exampleRequestPath "/images?concept=Homeless";
+    api:uriTemplate "/images?concept={concept}";
+    api:selector [
+        api:where
+          """SELECT DISTINCT ?item
+          WHERE {
+              ?item a dcmiType:Image ;
+                dcterms:subject ?conceptId .
+              ?conceptId skos:prefLabel ?x FILTER(str(?x) = ?concept) .
+          }""";
+        ];
+        api:defaultViewer uadi:imageViewer;
+    .
+
 # CUSTOM VIEWERS:
 
-uadi:graphViewer a api:Viewer;
-    api:name "Properties returned in graph view";
-    api:property skos:prefLabel, skos:topConceptOf, (skos:broader skos:prefLabel)   .
+uadi:nodesViewer a api:Viewer;
+    api:name "nodes";
+    rdfs:label "Properties returned in nodes array";
+    api:property skos:prefLabel,
+      (skosimg:hasImage dcterms:identifier),
+      skos:topConceptOf .
+
+uadi:linksViewer a api:Viewer;
+    api:name "links" ;
+    rdfs:label "Properties returned in links array" ;
+    api:property skos:broader .
 
 uadi:mapViewer a api:Viewer;
-    api:name "Properties returned in map view";
+    api:name "map";
+    rdfs:label "Properties returned in map view";
     api:property gl:wxsServer, gl:layer, dcat:extent,
+      
       (qb:structure qb:component gl:prefStyle)  . # Issue: this will get ANY style on this dataset. I only want the style associated with this concept.
+
+uadi:imageViewer a api:Viewer;
+    api:name "image";
+    rdfs:label "Properties returned in image view";
+    api:property dcterms:identifier, dcterms:format .
