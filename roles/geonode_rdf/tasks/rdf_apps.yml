@@ -135,4 +135,6 @@
   notify: restart django
 
 - name: initialise skosxl
-  uri: url=http://{{ host }}/skosxl/manage/init
+  uri:
+    url: http://{{ host }}/skosxl/manage/init
+    validate_certs: no
