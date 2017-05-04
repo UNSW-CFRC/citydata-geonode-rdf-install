@@ -20,7 +20,7 @@ owl:Ontology spin:rule [
         PREFIX sp: <http://spinrdf.org/sp>
         PREFIX spin: <http://spinrdf.org/spin>
 
-        BASE <http://cfdev.intersect.org.au/def/>
+        BASE <http://citydata-dev.be.unsw.edu.au/def/>
         PREFIX schemes: <voc/>
 
         CONSTRUCT {
@@ -49,7 +49,7 @@ owl:Class spin:rule [
             PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
             PREFIX vann: <http://purl.org/vocab/vann/>
 
-            BASE <http://cfdev.intersect.org.au/def/>
+            BASE <http://citydata-dev.be.unsw.edu.au/def/>
             PREFIX schemes: <voc/>
 
             CONSTRUCT {

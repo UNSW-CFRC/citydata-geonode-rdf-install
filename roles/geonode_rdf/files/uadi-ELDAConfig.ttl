@@ -17,10 +17,10 @@
 @prefix qb: <http://purl.org/linked-data/cube#> .
 
 # These two break if made relative to @base:
-@prefix uquol: 	<http://cfdev.intersect.org.au/def/voc/iso37120/> .
-@prefix gl: <http://cfdev.intersect.org.au/def/datasets/spatial/> .
+@prefix uquol: 	<http://citydata-dev.be.unsw.edu.au/def/voc/iso37120/> .
+@prefix gl: <http://citydata-dev.be.unsw.edu.au/def/datasets/spatial/> .
 
-@base <http://cfdev.intersect.org.au/def/> .
+@base <http://citydata-dev.be.unsw.edu.au/def/> .
 #
 @prefix uadi:  <api/uadi#> .
 @prefix skosimg: <image/> .
@@ -46,16 +46,16 @@ uadi:api a api:API;
         [api:name "serviceTitle"; api:value "UADI API"],
         [api:name "serviceAuthor"; api:value "Jonathan Doig"],
         [api:name "serviceAuthorEmail"; api:value "j.doig@unsw.edu.au"],
-        [api:name "serviceHomePage"; api:value "http://cfdev.intersect.org.au:8080/dna/meta/"];
+        [api:name "serviceHomePage"; api:value "http://citydata-dev.be.unsw.edu.au:8080/dna/meta/"];
 
     api:endpoint uadi:node, uadi:nodes, uadi:links, uadi:map, uadi:images ;
 
     rdfs:label "UADI API"@en;
 
-	api:sparqlEndpoint <http://cfdev.intersect.org.au:8080/rdf4j-server/repositories/uquol>
+	api:sparqlEndpoint <http://citydata-dev.be.unsw.edu.au:8080/rdf4j-server/repositories/uquol>
     .
 
-<http://cfdev.intersect.org.au:8080/rdf4j-server/repositories/uquol> elda:supportsNestedSelect true .
+<http://citydata-dev.be.unsw.edu.au:8080/rdf4j-server/repositories/uquol> elda:supportsNestedSelect true .
 
 uadi:node a api:ListEndpoint;
     rdfs:label "UQUOL concept and parent";

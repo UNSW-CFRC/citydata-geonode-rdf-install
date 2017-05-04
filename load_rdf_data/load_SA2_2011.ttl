@@ -15,7 +15,7 @@
 
 # Local namespaces
 #
-@base <http://cfdev.intersect.org.au/def/> .
+@base <http://citydata-dev.be.unsw.edu.au/def/> .
 
 @prefix gl: <datasets/spatial/> .
 @prefix uquol: <voc/iso37120/> .
@@ -37,7 +37,7 @@ gl:Census_2011_SA2 a void:Dataset ;
 
   # Imported from metadata
   rdfs:label  "Selected Census mtns and Averages for Statistical Areas Level 2 Australia 2011"@en ;
-  gl:wxsServer "http://cftest.intersect.org.au/geoserver" ;
+  gl:wxsServer "http://citydata-test.be.unsw.edu.au/geoserver" ;
   gl:layer "geonode:Census_2011_SA2" ;
   # Entailed:
   void:vocabulary absareas: ;

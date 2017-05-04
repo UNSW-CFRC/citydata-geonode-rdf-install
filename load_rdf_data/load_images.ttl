@@ -11,7 +11,7 @@
 @prefix dcmiType: <http://purl.org/dc/dcmitype/> .
 @prefix spar: <https://w3id.org/spar/mediatype/> .
 
-@base <http://cfdev.intersect.org.au/def/> .
+@base <http://citydata-dev.be.unsw.edu.au/def/> .
 
 @prefix uquol: <voc/iso37120/> .
 @prefix skosimg: <image/> .
@@ -23,7 +23,7 @@ uquol:15.2 skosimg:hasImage uquol:image_Homeless_1, uquol:image_Homeless_2, uquo
 
 uquol:image_Homeless_1 a dcmiType:Image ;
   dcterms:identifier
-"http://cftest.intersect.org.au/geoserver/wms?SERVICE=WMS&REQUEST=GetMap&LAYERS=geonode:Census_2011_SA2&STYLES=Census_2011_SA2_1f90f333&BBOX=96.82,-43.74,168,-9.14&SRS=EPSG%3A4326&FORMAT=image%2Fpng&TRANSPARENT=True&WIDTH=1536&HEIGHT=799"^^dcterms:URI ; # Entailed from load_SA2_2011.ttl
+"http://citydata-test.be.unsw.edu.au/geoserver/wms?SERVICE=WMS&REQUEST=GetMap&LAYERS=geonode:Census_2011_SA2&STYLES=Census_2011_SA2_1f90f333&BBOX=96.82,-43.74,168,-9.14&SRS=EPSG%3A4326&FORMAT=image%2Fpng&TRANSPARENT=True&WIDTH=1536&HEIGHT=799"^^dcterms:URI ; # Entailed from load_SA2_2011.ttl
   dcterms:subject uquol:15.2 ;
   dcterms:format spar:image\/png .
 
@@ -34,7 +34,7 @@ uquol:image_Homeless_2 a dcmiType:Image ;
 #  dcterms:license CC-BY....
 
 uquol:image_Homeless_3 a dcmiType:Image ;
-  dcterms:identifier "http://cfdev.intersect.org.au/uploaded/images/Homeless_3.png"^^dcterms:URI ;
+  dcterms:identifier "http://citydata-dev.be.unsw.edu.au/uploaded/images/Homeless_3.png"^^dcterms:URI ;
   dcterms:subject uquol:15.2 ;
   dcterms:format spar:image\/png .
 #  vocab??? width
